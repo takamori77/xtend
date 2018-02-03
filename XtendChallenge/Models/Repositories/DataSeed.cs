@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using XtendChallenge.Services.Formatters;
 using XtendChallenge.Services.Interfaces;
 
 namespace XtendChallenge.Models.Repositories
@@ -8,6 +9,8 @@ namespace XtendChallenge.Models.Repositories
     {
         internal static List<Account> SetupAccounts(IAccountRepository accountRepository, IClientRepository clientRepository, IFacilityService facilityService)
         {
+            clientRepository.AddClient(GenerateClient(1));
+            clientRepository.AddClient(GenerateClient(6));
             var accounts = new List<Account>();
             for (int x = 0; x < 12; x++)
             {
@@ -77,6 +80,18 @@ namespace XtendChallenge.Models.Repositories
                 GroupName = string.Format("G{0}", x),
                 PlanName = string.Format("HD HMO {0}", x),
                 Policy = string.Format("P12134ABC{0}", x)
+            };
+        }
+
+        internal static Client GenerateClient(int x)
+        {
+            return new Client
+            {
+                Id = x < 5 ? 1 : 2,
+                Name = x < 5 ? "GeneralHospital" : "VeteranHospital",
+                Abbreviation = x < 5 ? "gh" : "vh",
+                BalanceThreshold = 100.0m,
+                FormatterType = x < 5 ? FormatterType.Pipe : FormatterType.CSV
             };
         }
     }

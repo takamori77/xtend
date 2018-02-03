@@ -11,8 +11,14 @@ namespace XtendChallenge.Services
 
         public ClientService(IClientRepository clientRepository) => ClientRepository = clientRepository;
 
+        public Client AddClient(Client client) => ClientRepository.AddClient(client);
+
+        public Client DeleteClient(int id) => ClientRepository.DeleteClient(id);
+
         public List<Client> GetAllClients() => ClientRepository.GetAllClients();
 
         public Client GetClient(int id) => ClientRepository.GetClientById(id);
+
+        public Client GetClientById(int id) => ClientRepository.GetClientById(id);
     }
 }

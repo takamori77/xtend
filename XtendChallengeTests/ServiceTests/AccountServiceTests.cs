@@ -11,6 +11,7 @@ namespace XtendChallengeTests.ServiceTests
         IAccountService accountService;
         IFacilityService facilityService;
         IClientRepository clientRepository = new ClientRepositoryInMem();
+        IClientService clientService;
 
         public AccountServiceTests()
         {
@@ -18,19 +19,20 @@ namespace XtendChallengeTests.ServiceTests
             facilityService = new FacilityService(facilityRepository);
             var accountRepository = new AccountRepositoryInMem();
             accountService = new AccountService(accountRepository);
+            clientService = new ClientService(clientRepository);
         }
 
 
         [TestInitialize]
         public void Setup()
         {
-            TestHelper.CleanUpData(accountService, facilityService);
+            TestHelper.CleanUpData(accountService, facilityService, clientService);
         }
 
         [TestCleanup]
         public void Cleanup()
         {
-            TestHelper.CleanUpData(accountService, facilityService);
+            TestHelper.CleanUpData(accountService, facilityService, clientService);
         }
 
         [TestMethod]
@@ -127,7 +129,7 @@ namespace XtendChallengeTests.ServiceTests
             TestHelper.SetupAccounts(accountService, facilityService, clientRepository);
 
             // Act
-            var actualAccounts = accountService.GetAllAccountsByFacilityForClient(facilityService.GetFacilityById(0),clientRepository.GetClientById(1));
+            var actualAccounts = accountService.GetAllAccountsByFacilityForClient(facilityService.GetFacilityById(0), clientRepository.GetClientById(1));
 
             // Assert
             Assert.IsNotNull(actualAccounts);

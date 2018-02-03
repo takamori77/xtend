@@ -5,7 +5,6 @@ using XtendChallenge.Models.Repositories;
 using XtendChallenge.Services;
 using XtendChallenge.Services.Formatters;
 using XtendChallenge.Services.Interfaces;
-using XtendChallenge.Services.Stubs;
 
 namespace XtendChallengeTests
 {
@@ -16,23 +15,25 @@ namespace XtendChallengeTests
         private IFileService fileService;
         private IFacilityService facilityService;
         private IClientRepository clientRepository = new ClientRepositoryInMem();
+        private IClientService clientService;
 
         [TestInitialize]
         public void Setup()
         {
             var facilityRepository = new FacilityRepositoryInMem();
             facilityService = new FacilityService(facilityRepository);
-            var accountRepository = new AccountRepositoryInMem(clientRepository, facilityService);
+            var accountRepository = new AccountRepositoryInMem();
             accountService = new AccountService(accountRepository);
             fileService = new FileService(accountService, facilityService);
-            TestHelper.CleanUpData(accountService, facilityService);
+            clientService = new ClientService(clientRepository);
+            TestHelper.CleanUpData(accountService, facilityService, clientService);
             TestHelper.SetupAccounts(accountService, facilityService, clientRepository);
         }
 
         [TestCleanup]
         public void Cleanup()
         {
-            TestHelper.CleanUpData(accountService, facilityService);
+            TestHelper.CleanUpData(accountService, facilityService, clientService);
         }
 
         [TestMethod]
@@ -41,7 +42,7 @@ namespace XtendChallengeTests
             // Arrange
             var fileFormatter = new PipeFormatter();
             var client = accountService.GetAllAccounts().Where(a => a.Client.FormatterType == FormatterType.Pipe).FirstOrDefault().Client;
-            var expectedExportFile = TestHelper.GeneratePipeExportFile(accountService, facilityService, fileFormatter, client, clientRepository);
+            var expectedExportFile = TestHelper.GeneratePipeExportFile(accountService, facilityService, fileFormatter, client, clientRepository, clientService);
             var accounts = accountService.GetAllAccountsByClient(client);
 
             // Act
@@ -97,7 +98,7 @@ namespace XtendChallengeTests
             var fileFormatter = new PipeFormatter();
             var accounts = accountService.GetAllAccounts();
             var client = accountService.GetAllAccounts().Where(a => a.Client.FormatterType == FormatterType.Pipe).FirstOrDefault().Client;
-            var expectedExportFile = TestHelper.GeneratePipeExportFile(accountService, facilityService, fileFormatter, client, clientRepository);
+            var expectedExportFile = TestHelper.GeneratePipeExportFile(accountService, facilityService, fileFormatter, client, clientRepository, clientService);
 
             // Act
             var actualExportFile = fileService.GetExportFile(client);
@@ -148,7 +149,7 @@ namespace XtendChallengeTests
             var fileFormatter = new PipeFormatter();
             var accounts = accountService.GetAllAccounts();
             var client = accountService.GetAllAccounts().Where(a => a.Client.FormatterType == FormatterType.Pipe).FirstOrDefault().Client;
-            var expectedExportFile = TestHelper.GeneratePipeExportFile(accountService, facilityService, fileFormatter, client, clientRepository);
+            var expectedExportFile = TestHelper.GeneratePipeExportFile(accountService, facilityService, fileFormatter, client, clientRepository, clientService);
 
             // Act
             var actualExportFiles = fileService.GetExportFile(client);

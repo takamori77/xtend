@@ -8,37 +8,21 @@ namespace XtendChallenge.Models.Repositories
     {
         private Dictionary<int, Client> Clients = new Dictionary<int, Client>();
 
-        public ClientRepositoryInMem()
+        public Client AddClient(Client client)
         {
-            var client1 = new Client
-            {
-                Abbreviation = "gh",
-                Id = 1,
-                Name = "GeneralHospital",
-                FormatterType = FormatterType.Pipe,
-                BalanceThreshold = 0
-            };
-
-            var client2 = new Client
-            {
-                Abbreviation = "vh",
-                Id = 2,
-                Name = "VeteranHospital",
-                FormatterType = FormatterType.CSV,
-                BalanceThreshold = 0.0m
-            };
-            Clients.Add(client1.Id, client1);
-            Clients.Add(client2.Id, client2);
+            Clients.Add(client.Id, client);
+            return Clients[client.Id];
         }
 
-        public List<Client> GetAllClients()
+        public Client DeleteClient(int id)
         {
-            return Clients.Values.ToList();
+            var clientToDelete = Clients[id];
+            Clients.Remove(id);
+            return clientToDelete;
         }
 
-        public Client GetClientById(int id)
-        {
-            return Clients[id];
-        }
+        public List<Client> GetAllClients() => Clients.Values.ToList();
+
+        public Client GetClientById(int id) => Clients[id];
     }
 }

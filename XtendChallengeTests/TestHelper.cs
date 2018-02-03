@@ -9,7 +9,7 @@ namespace XtendChallengeTests
 {
     public static class TestHelper
     {
-        internal static void CleanUpData(IAccountService accountService, IFacilityService facilityService)
+        internal static void CleanUpData(IAccountService accountService, IFacilityService facilityService, IClientService clientService)
         {
             foreach (var account in accountService.GetAllAccounts())
             {
@@ -20,10 +20,17 @@ namespace XtendChallengeTests
             {
                 facilityService.DeleteFacility(facility.Id);
             }
+
+            foreach (var client in clientService.GetAllClients())
+            {
+                clientService.DeleteClient(client.Id);
+            }
         }
 
         internal static List<Account> SetupAccounts(IAccountService accountService, IFacilityService facilityService, IClientRepository clientRepository)
         {
+            clientRepository.AddClient(GenerateClient(1));
+            clientRepository.AddClient(GenerateClient(6));
             var accounts = new List<Account>();
             for (int x = 0; x < 10; x++)
             {
@@ -32,10 +39,11 @@ namespace XtendChallengeTests
                 accountService.AddAccount(account);
                 accounts.Add(account);
             }
+
             return accounts;
         }
 
-        internal static void CleanUpData(IAccountRepository accountRepository, IFacilityService facilityService)
+        internal static void CleanUpData(IAccountRepository accountRepository, IFacilityService facilityService, IClientService clientService)
         {
             foreach (var account in accountRepository.GetAllAccounts())
             {
@@ -46,12 +54,17 @@ namespace XtendChallengeTests
             {
                 facilityService.DeleteFacility(facility.Id);
             }
+
+            foreach (var client in clientService.GetAllClients())
+            {
+                clientService.DeleteClient(client.Id);
+            }
         }
 
-        internal static ExportFile GeneratePipeExportFile(IAccountService accountService, IFacilityService facilityService, PipeFormatter fileFormatter, Client client, IClientRepository clientRepository)
+        internal static ExportFile GeneratePipeExportFile(IAccountService accountService, IFacilityService facilityService, PipeFormatter fileFormatter, Client client, IClientRepository clientRepository, IClientService clientService)
         {
             var exportDate = DateTime.Now;
-            CleanUpData(accountService, facilityService);
+            CleanUpData(accountService, facilityService, clientService);
             SetupAccounts(accountService, facilityService, clientRepository);
             var accounts = accountService.GetAllAccountsByClient(client);
             var exportFile = new ExportFile
@@ -94,6 +107,8 @@ namespace XtendChallengeTests
 
         internal static List<Account> SetupAccounts(IAccountRepository accountRepository, IFacilityService facilityService, IClientRepository clientRepository)
         {
+            clientRepository.AddClient(GenerateClient(1));
+            clientRepository.AddClient(GenerateClient(6));
             var accounts = new List<Account>();
             for (int x = 0; x < 10; x++)
             {

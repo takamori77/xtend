@@ -12,24 +12,26 @@ namespace XtendChallengeTests.RepositoryTests
         private IFacilityService facilityService;
         private IAccountRepository accountRepository;
         private IClientRepository clientRepository = new ClientRepositoryInMem();
+        private IClientService clientService;
 
         public AccountRepositoryTests()
         {
             var facilityRepository = new FacilityRepositoryInMem();
             facilityService = new FacilityService(facilityRepository);
-            accountRepository = new AccountRepositoryInMem(new ClientRepositoryInMem(), facilityService);
+            clientService = new ClientService(clientRepository);
+            accountRepository = new AccountRepositoryInMem(clientRepository, facilityService);
         }
 
         [TestInitialize]
         public void Setup()
         {
-            TestHelper.CleanUpData(accountRepository, facilityService);
+            TestHelper.CleanUpData(accountRepository, facilityService, clientService);
         }
 
         [TestCleanup]
         public void Cleanup()
         {
-            TestHelper.CleanUpData(accountRepository, facilityService);
+            TestHelper.CleanUpData(accountRepository, facilityService, clientService);
         }
 
         [TestMethod]

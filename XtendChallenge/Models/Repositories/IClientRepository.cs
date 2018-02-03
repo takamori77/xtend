@@ -6,5 +6,7 @@ namespace XtendChallenge.Models.Repositories
     {
         List<Client> GetAllClients();
         Client GetClientById(int id);
+        Client AddClient(Client client);
+        Client DeleteClient(int id);
     }
 }
