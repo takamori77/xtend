@@ -1,0 +1,12 @@
+﻿@{
+    ViewData["Title"] = "Reports";
+    Client client = (Client)ViewData["Client"];
+    foreach (ExportFile file in (List<ExportFile>)ViewData["Files"])
+    {
+        <form action="/Home/GetReport">
+            <input type="hidden" name="clientId" value="@client.Id" />
+            <input type="submit" readonly value="@file.FileName" name="fileName"/>
+        </form>
+        <hr />
+    }
+}

@@ -1,0 +1,16 @@
+﻿@{
+    ViewData["Title"] = "Export Data";
+}
+
+
+
+<div class="row">
+    <br />
+    <form action="Home/GetReportList">
+        <label class="col-md-4" for="client_select">Select Client</label>
+        @Html.DropDownList("id",
+                          new SelectList((IEnumerable<Client>)ViewData["clientList"], "Id", "Name"))
+
+        <input type="submit" value="Export Data" />
+    </form>
+</div>
